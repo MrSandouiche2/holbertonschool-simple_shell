@@ -1,0 +1,43 @@
+.TH SIMPLE_SHELL 1 "August 2024" "1.0" "Simple Shell"
+.SH NAME
+simple_shell \- A simple UNIX shell
+.SH SYNOPSIS
+.B simple_shell
+.RI [ options ]
+.SH DESCRIPTION
+This is a simple shell implementation that allows users to run commands in a UNIX-like environment. It is designed to be lightweight and easy to use, providing basic shell functionalities.
+.SH COMMANDS
+.TP
+.B exit
+Exit the shell.
+.TP
+.B env
+Display the current environment variables.
+.SH USAGE
+To run the shell, use the following command:
+.B ./hsh
+.PP
+Once in the shell, you can enter commands directly. For example:
+.RS
+.B /bin/ls
+.RE
+.SH INTERACTIVE MODE
+In interactive mode, the shell will display a prompt (`($)`) and wait for user input. Users can type commands and press Enter to execute them.
+.SH NON-INTERACTIVE MODE
+The shell can also be run in non-interactive mode by piping commands to it. For example:
+.B echo "/bin/ls" | ./hsh
+.SH LIMITATIONS
+This shell does not support advanced features such as:
+.TP
+.B - Arguments for commands
+.B - Pipes and redirections
+.B - Special characters (", ', &, #)
+.SH EXIT STATUS
+The shell returns an exit status of 0 for successful commands and 1 for errors.
+.SH AUTHOR
+Mieuzet Frédéric <9344@holbertstudents.com>
+.PP
+Mehdi Zemihi <8837@holbertonstudents.com>
+.SH LICENSE
+This project is licensed under the MIT License.
+
