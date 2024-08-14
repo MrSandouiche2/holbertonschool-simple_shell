@@ -1,23 +1,35 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 int main(void)
 {
 	char *caractere = NULL;
 	size_t taille = 0;
+	typedef long ssize_t;
+	ssize_t longueur;
 
-	printf("$");
-
-	ssize_t longueur = getline(&caractere, &taille, stdin);
-
-	if (longueur != -1)
+	while (1)
 	{
+		printf("$ ");
+		longueur = getline(&caractere, &taille, stdin);
+
+		if (longueur == -1)
+		{
+			if (feof(stdin))
+			{
+				break;
+			}
+			else
+			{
+				printf("Erreur lors de la lecture de la ligne.\n");
+				break;
+			}
+		}
+
 		printf("%s", caractere);
 	}
-	else
-	{
-		printf("Erreur lors de la lecture de la ligne.\n");
-	}
+
 	free(caractere);
-	return (0);
+	return 0;
 }
