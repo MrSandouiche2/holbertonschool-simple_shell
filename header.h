@@ -14,6 +14,7 @@ void execute_command(char *command);
 void prompt(void);
 char *get_input(void);
 void handle_builtins(char *command);
+void get_process_parent_id(void);
 
 #endif /* HEADER_H */
 

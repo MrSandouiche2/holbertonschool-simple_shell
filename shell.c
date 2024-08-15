@@ -5,18 +5,19 @@
  */
 void prompt(void)
 {
-	char *command = NULL; /*Initialise la commande*/
-	size_t len = 0;/*Pour getline*/
+	char *command = NULL; /* Initialise la commande */
 
 	while (1)
 	{
-		printf("($) "); /*Affiche le prompt*/
+		printf("($) "); /* Affiche le prompt */
 
-		if (getline(&command, &len, stdin) == -1)
+		command = get_input(); /* Appel à get_input ici */
+
+		if (command == NULL)
 		{
-			if (feof(stdin))
+			if (feof(stdin)) /* Vérifie si EOF (Ctrl+D) est pressé */
 			{
-				printf("\n"); /*Gérer l'entrée EOF (Ctrl+D)*/
+				printf("\n");
 				free(command);
 				exit(0);
 			}
@@ -29,12 +30,12 @@ void prompt(void)
 
 		if (strlen(command) > 0)
 		{
-			handle_builtins(command); /*Vérifier les commandes intégrées*/
-			execute_command(command); /*Exécuter la commande*/
+			handle_builtins(command); /* Vérifier les commandes intégrées */
 		}
-	}
 
-	free(command);
+		free(command); /* Libérer la mémoire ici pour éviter les fuites */
+	}
 }
+
 
 

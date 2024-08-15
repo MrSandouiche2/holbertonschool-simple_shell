@@ -14,15 +14,25 @@ void execute_command(char *command)
 	}
 	else if (pid == 0)
 	{
-		char *args[2];
+		char *args[100];/*capacité de 100 arg max*/
+		char *token = strtok(command, " ");
+		int i = 0;
 
-		args[0] = command;/*Commande à exécuter*/
-		args[1] = NULL;
-
-		if (execve(args[0], args, environ) == -1)
+		/*remplir le tableau d arguments*/
+		while (token != NULL && i < 99)
 		{
-			perror("./hsh");/*Afficher l'erreur*/
+			args[i++] = token;
+			token = strtok(NULL, " ");
 		}
+		args[i] = NULL;/*le dernier element doit etre NULL pour execvp*/
+
+		/*executer la commande avec execvp*/
+		if (execvp(args[0], args) == -1)
+		{
+			fprintf(stderr, "%s: command not found\n", args[0]);/*Afficher l'erreur*/
+			exit (127);
+		}
+
 		exit(0);/*Terminer le processus fils*/
 	}
 	else

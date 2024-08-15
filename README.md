@@ -7,8 +7,10 @@ designed to mimic basic functionality of Unix-like command-line interfaces.
 
 Compile the shell using the following command:
 
-```bash
 gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
+
+```bash
+
 
 USAGE
 
