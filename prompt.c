@@ -9,7 +9,10 @@ void prompt(void)
 
 	while (1)
 	{
-		printf("($) "); /* Affiche le prompt */
+		if (isatty(fileno(stdin)))
+		{
+			printf("($) "); /* Affiche le prompt */
+		}
 
 		command = get_input(); /* Appel à get_input ici */
 
@@ -30,7 +33,7 @@ void prompt(void)
 
 		if (strlen(command) > 0)
 		{
-			handle_builtins(command); /* Vérifier les commandes intégrées */
+			handle_command(command); /* Gère la commande */
 		}
 
 		free(command); /* Libérer la mémoire ici pour éviter les fuites */

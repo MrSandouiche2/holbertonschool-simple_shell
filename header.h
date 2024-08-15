@@ -9,12 +9,11 @@
 
 extern char **environ;
 
-void display_env(void);
-void execute_command(char *command);
 void prompt(void);
 char *get_input(void);
+void handle_command(char *command);
 void handle_builtins(char *command);
-void get_process_parent_id(void);
+int is_builtin(char *command);
 
 #endif /* HEADER_H */
 
