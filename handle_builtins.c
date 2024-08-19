@@ -38,23 +38,20 @@ int is_builtin(char *command)
  */
 void handle_builtins(char *command)
 {
-char *path;
-
 	if (strcmp(command, "exit") == 0)
 	{
 		exit(0);
 	}
-	else if (strncmp(command, "cd", 2) == 0)
+	else if (strcmp(command, "cd") == 0)
 	{
-		path = strtok(command, " ");/*Récupère le chemin après "cd "*/
-		path = strtok(NULL, " ");
-		if (chdir(path) != 0)
+		/*Ici, nous n'avons plus d'arguments, donc juste 'cd' sans chemin*/
+		if (chdir(getenv("HOME")) != 0)
 		{
-			perror("cd failed");
+			perror("cd to HOME failed");
 		}
 	}
 	else if (strcmp(command, "env") == 0)
 	{
-		print_env();/*Appelle la fonction pour afficher l'environnement*/
+		print_env(); /* Appelle la fonction pour afficher l'environnement */
 	}
 }

@@ -16,13 +16,20 @@ void handle_command(char *command)
 	}
 	else
 	{
+		/* Vérifier qu'il n'y a pas d'espaces dans la commande */
+		if (strchr(command, ' ') != NULL)
+		{
+			printf("Error: Command should not contain any arguments.\n");
+			return; /* Ne pas exécuter la commande si des arguments sont présents */
+		}
+
 		pid = fork();
 		if (pid == 0)
 		{
 			char *argv[2];
 			char *envp[] = { NULL }; /* Passer un environnement vide */
 
-			argv[0] = command;/* Commande unique sans arguments */
+			argv[0] = command; /* Commande unique sans arguments */
 			argv[1] = NULL;
 
 			execve(argv[0], argv, envp);
