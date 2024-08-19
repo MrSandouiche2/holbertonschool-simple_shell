@@ -1,4 +1,7 @@
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
 #include "header.h"
+
 
 /**
  * get_input - Get command input from the user.

@@ -1,12 +1,11 @@
 #include "header.h"
 #include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
+#include <sys/wait.h>
+#include <unistd.h>
 
-/* Dans la fonction handle_command, remplacer execvp par execve */
-void handle_command(char *command)
+void handle_command(char *command, char *prog_name)
 {
+	(void)prog_name;
 	pid_t pid;
 	int status;
 
@@ -19,19 +18,14 @@ void handle_command(char *command)
 		pid = fork();
 		if (pid == 0)
 		{
-			char *argv[2];
-			char *envp[] = {NULL}; /* Passer un environnement vide */
-
-			argv[0] = command; /* Commande unique sans arguments */
-			argv[1] = NULL;
-
-			execve(argv[0], argv, envp);
-			perror(argv[0]);
+			char *argv[] = {command, NULL};
+			execve(argv[0], argv, environ);
+			perror("execve");
 			exit(1);
 		}
 		else if (pid < 0)
 		{
-			perror("Fork failed");
+			perror("fork");
 		}
 		else
 		{

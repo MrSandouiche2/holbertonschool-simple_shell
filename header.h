@@ -16,5 +16,3 @@ void handle_builtins(char *command);
 int is_builtin(char *command);
 
 #endif /* HEADER_H */
-
-

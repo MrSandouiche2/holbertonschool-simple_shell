@@ -1,3 +1,9 @@
+#define _POSIX_C_SOURCE 200809L
+#include <stdio.h>
+#include <unistd.h>
+#include <stdlib.h>
+#include <string.h>
+
 #include "header.h"
 
 /**
@@ -6,41 +12,36 @@
  */
 void prompt(char *prog_name)
 {
-	char *command = NULL; /* Initialise la commande */
+	char *command = NULL;
+	size_t len = 0;
 
 	while (1)
 	{
 		if (isatty(fileno(stdin)))
 		{
-			printf("($) "); /* Affiche le prompt */
+			printf("(%s) ", prog_name);
 		}
 
-		command = get_input(); /* Appel à get_input ici */
-
-		if (command == NULL)
+		if (getline(&command, &len, stdin) == -1)
 		{
-			if (feof(stdin)) /* Vérifie si EOF (Ctrl+D) est pressé */
+			if (feof(stdin))
 			{
 				printf("\n");
 				free(command);
 				exit(0);
 			}
-			perror(prog_name); /* Utiliser prog_name pour l'affichage des erreurs */
+			perror("getline");
 			continue;
 		}
 
-		/* Supprimer le saut de ligne à la fin */
 		command[strcspn(command, "\n")] = 0;
 
 		if (strlen(command) > 0)
 		{
-			handle_command(command, prog_name); /* Gère la commande */
+			handle_command(command, prog_name);
 		}
 
-		free(command); /* Libérer la mémoire ici pour éviter les fuites */
+		free(command);
+		command = NULL;
 	}
 }
-
-
-
-
