@@ -1,16 +1,17 @@
 #include "header.h"
 /**
  * main - Entry point of the simple shell program.
- *
- * This function starts the shell prompt and handles user input
- * in an infinite loop until the user exits.
+ * @argc: Argument count.
+ * @argv: Argument vector.
  *
  * Return: Always returns 0.
  */
-int main(void)
+int main(int argc, char **argv)
 {
-	prompt();/*Afficher le prompt*/
+	(void)argc; /* Nous n'utilisons pas argc, mais nous devons l'accepter */
+	prompt(argv[0]); /* Passer le nom du programme à prompt */
 	return (0);
 }
+
 
 

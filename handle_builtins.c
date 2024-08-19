@@ -44,10 +44,9 @@ void handle_builtins(char *command)
 	}
 	else if (strcmp(command, "cd") == 0)
 	{
-		/*Ici, nous n'avons plus d'arguments, donc juste 'cd' sans chemin*/
 		if (chdir(getenv("HOME")) != 0)
 		{
-			perror("cd to HOME failed");
+			perror("cd failed");
 		}
 	}
 	else if (strcmp(command, "env") == 0)
@@ -55,3 +54,4 @@ void handle_builtins(char *command)
 		print_env(); /* Appelle la fonction pour afficher l'environnement */
 	}
 }
+

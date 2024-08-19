@@ -9,11 +9,12 @@
 
 extern char **environ;
 
-void prompt(void);
+void prompt(char *prog_name);
 char *get_input(void);
-void handle_command(char *command);
+void handle_command(char *command, char *prog_name);
 void handle_builtins(char *command);
 int is_builtin(char *command);
 
 #endif /* HEADER_H */
+
 

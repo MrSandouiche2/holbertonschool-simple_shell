@@ -1,11 +1,15 @@
 #include "header.h"
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <fcntl.h>
-#include <errno.h>
 
-/* Dans la fonction handle_command, remplacer execvp par execve */
-void handle_command(char *command)
+/**
+ * handle_command - Handle external commands.
+ * @command: The command to handle.
+ * @prog_name: The name of the program (argv[0]).
+ *
+ * This function checks if the command is a built-in command and
+ * processes it accordingly. If it is an external command, it
+ * forks a new process to execute it.
+ */
+void handle_command(char *command, char *prog_name)
 {
 	pid_t pid;
 	int status;
@@ -19,7 +23,7 @@ void handle_command(char *command)
 		/* Vérifier qu'il n'y a pas d'espaces dans la commande */
 		if (strchr(command, ' ') != NULL)
 		{
-			printf("Error: Command should not contain any arguments.\n");
+			printf("%s: Command should not contain any arguments.\n", prog_name);
 			return; /* Ne pas exécuter la commande si des arguments sont présents */
 		}
 
@@ -33,12 +37,12 @@ void handle_command(char *command)
 			argv[1] = NULL;
 
 			execve(argv[0], argv, envp);
-			perror(argv[0]);
+			fprintf(stderr, "%s: 1: %s: not found\n", prog_name, command);
 			exit(1);
 		}
 		else if (pid < 0)
 		{
-			perror("Fork failed");
+			perror(prog_name);
 		}
 		else
 		{
@@ -46,3 +50,4 @@ void handle_command(char *command)
 		}
 	}
 }
+
