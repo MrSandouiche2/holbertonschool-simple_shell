@@ -23,17 +23,16 @@ int main(int argc, char **argv)
 
 		/* Read a line from standard input */
 		nread = getline(&line, &len, stdin);
-		if (nread == -1) /* EOF condition (Ctrl+D) */
+		if (nread == -1) /* EOF condition (Ctrl+D) or error */
 		{
-			if (feof(stdin))
-			{
+			if (line) /* Free allocated memory if any */
 				free(line);
+
+			if (nread == -1 && line == NULL) /* End of file reached */
 				exit(0); /* Normal exit */
-			}
 			else
 			{
 				perror("getline");
-				free(line);
 				exit(1);
 			}
 		}
