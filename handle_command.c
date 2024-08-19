@@ -2,51 +2,54 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
+#include <string.h>
 
-/**
- * handle_command - Handles the execution of a command
- * @command: The command to execute
- * @prog_name: The name of the program (argv[0])
- *
- * Return: void
- */
 void handle_command(char *command, char *prog_name)
 {
 	pid_t pid;
 	int status;
-	char *argv[2];
+	char *argv[MAX_ARGS]; /* MAX_ARGS est maintenant défini */
+	int argc = 0;
+	char *token;
 
-	/* Remove the newline character from the command */
-	command[strcspn(command, "\n")] = '\0';
-
-	/* Check if the command is executable */
-	if (access(command, X_OK) == -1)
+	/* Tokenize the command to split it into arguments */
+	token = strtok(command, " \n");
+	while (token != NULL && argc < MAX_ARGS - 1)
 	{
-		fprintf(stderr, "%s: %s: command not found\n", prog_name, command);
+		argv[argc++] = token;
+		token = strtok(NULL, " \n");
+	}
+	argv[argc] = NULL;
+
+	if (argc == 0) /* No command to execute */
 		return;
-	}
 
-	/* Create a child process */
-	pid = fork();
-	if (pid == 0)
+	/* Check if the command is a built-in command */
+	if (is_builtin(argv[0]))
 	{
-		argv[0] = command;
-		argv[1] = NULL;
-
-		/* Execute the command */
-		execve(argv[0], argv, environ);
-		perror("execve");
-		exit(1);
-	}
-	else if (pid < 0)
-	{
-		/* Error handling for fork failure */
-		perror("fork");
+		handle_builtins(argv[0]);
 	}
 	else
 	{
-		/* Wait for the child process to finish */
-		wait(&status);
+		pid = fork();
+		if (pid == 0)
+		{
+			/* Child process */
+			execve(argv[0], argv, environ);
+			/* If execve fails, print error and exit using error_message */
+			error_message(prog_name, argv[0], argc);
+			exit(1);
+		}
+		else if (pid < 0)
+		{
+			/* Error forking */
+			perror("fork");
+		}
+		else
+		{
+			/* Parent process waits for the child to finish */
+			wait(&status);
+		}
 	}
 }
 

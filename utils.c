@@ -1,15 +1,7 @@
 #include "header.h"
+#include <stdio.h>
 
-/**
- * error_message - Prints an error message
- * @prog_name: The name of the program (argv[0])
- * @command: The command that caused the error
- *
- * Return: void
- */
-void error_message(char *prog_name, char *command)
+void error_message(char *prog_name, char *command, int argc)
 {
-	/* Print the error message to stderr */
-	fprintf(stderr, "%s: %s: command not found\n", prog_name, command);
+	fprintf(stderr, "%s: %d: %s: not found\n", prog_name, argc, command);
 }
-
