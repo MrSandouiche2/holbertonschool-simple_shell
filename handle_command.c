@@ -1,14 +1,10 @@
 #include "header.h"
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <errno.h>
 
-/**
- * handle_command - Handle external commands.
- * @command: The command to handle.
- * @prog_name: The name of the program (argv[0]).
- *
- * This function checks if the command is a built-in command and
- * processes it accordingly. If it is an external command, it
- * forks a new process to execute it.
- */
+/* Dans la fonction handle_command, remplacer execvp par execve */
 void handle_command(char *command)
 {
 	pid_t pid;
@@ -24,18 +20,18 @@ void handle_command(char *command)
 		if (pid == 0)
 		{
 			char *argv[2];
-			argv[0] = command;
+			char *envp[] = {NULL}; /* Passer un environnement vide */
+
+			argv[0] = command; /* Commande unique sans arguments */
 			argv[1] = NULL;
 
-			if (execve(command, argv, environ) == -1)
-			{
-				perror("execve");
-				exit(EXIT_FAILURE);
-			}
+			execve(argv[0], argv, envp);
+			perror(argv[0]);
+			exit(1);
 		}
 		else if (pid < 0)
 		{
-			perror("fork");
+			perror("Fork failed");
 		}
 		else
 		{
