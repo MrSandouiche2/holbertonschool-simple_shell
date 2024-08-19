@@ -32,7 +32,6 @@ int main(int argc, char **argv)
 				exit(0); /* Normal exit */
 			else
 			{
-				perror("getline");
 				exit(1);
 			}
 		}
