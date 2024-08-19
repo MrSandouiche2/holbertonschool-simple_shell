@@ -13,34 +13,31 @@ int main(int argc, char **argv)
 	size_t len = 0;
 	ssize_t nread;
 
-	/* Suppression du warning pour un paramètre non utilisé */
 	(void)argc;
+	(void)argv;
 
-	while (1)
+ 	if (isatty(STDIN_FILENO))
 	{
-		/* Display the prompt */
-		display_prompt();
-
-		/* Read a line from standard input */
-		nread = getline(&line, &len, stdin);
-		if (nread == -1) /* EOF condition (Ctrl+D) or error */
+		while (1)
 		{
-			if (line) /* Free allocated memory if any */
-				free(line);
-
-			if (nread == -1 && line == NULL) /* End of file reached */
-				exit(0); /* Normal exit */
-			else
+			display_prompt();
+			nread = getline(&line, &len, stdin);
+			if (nread == -1)
 			{
-				exit(1);
+				free(line);
+				break;
 			}
+			handle_command(line, argv[0]);
 		}
-
-		/* Handle the command */
-		handle_command(line, argv[0]);
+	}
+	else
+	{
+		while ((nread = getline(&line, &len, stdin)) != -1)
+		{
+			handle_command(line, argv[0]);
+		}
+		free(line);
 	}
 
-	free(line);
-	return (0);
+	return 0;
 }
-
