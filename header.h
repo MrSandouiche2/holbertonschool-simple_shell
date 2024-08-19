@@ -3,16 +3,15 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <unistd.h>
 #include <string.h>
-#include <sys/wait.h>
+#include <unistd.h>
 
+/* Global environment variable */
 extern char **environ;
 
-void prompt(char *prog_name);
-char *get_input(void);
+/* Function prototypes */
+void display_prompt(void);
 void handle_command(char *command, char *prog_name);
-void handle_builtins(char *command);
-int is_builtin(char *command);
+void error_message(char *prog_name, char *command);
 
 #endif /* HEADER_H */

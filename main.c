@@ -1,16 +1,48 @@
 #include "header.h"
 
+/**
+ * main - Entry point of the shell
+ * @argc: Argument count
+ * @argv: Argument vector
+ *
+ * Return: 0 on success, 1 on failure
+ */
 int main(int argc, char **argv)
 {
-	if (argc > 0)
+	char *line = NULL;
+	size_t len = 0;
+	ssize_t nread;
+
+	/* Suppression du warning pour un paramètre non utilisé */
+	(void)argc;
+
+	while (1)
 	{
-		prompt(argv[0]);
-	}
-	else
-	{
-		fprintf(stderr, "Erreur : Pas de nom de programme disponible.\n");
-		return 1;
+		/* Display the prompt */
+		display_prompt();
+
+		/* Read a line from standard input */
+		nread = getline(&line, &len, stdin);
+		if (nread == -1) /* EOF condition (Ctrl+D) */
+		{
+			if (feof(stdin))
+			{
+				free(line);
+				exit(0); /* Normal exit */
+			}
+			else
+			{
+				perror("getline");
+				free(line);
+				exit(1);
+			}
+		}
+
+		/* Handle the command */
+		handle_command(line, argv[0]);
 	}
 
-	return 0;
+	free(line);
+	return (0);
 }
+
