@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <limits.h>
+
 
 #define PATH_MAX 4096
 
@@ -47,23 +49,22 @@ char *find_executable(char *command)
 {
 	char *path_copy;
 	char *token;
-
 	char *path = getenv("PATH");
 	if (path == NULL)
 		return NULL;
 
-	path_copy = strdup(path);
+	path_copy = malloc(strlen(path) + 1);
 	if (path_copy == NULL)
 		return NULL;
+
+	strcpy(path_copy, path);
 
 	token = strtok(path_copy, ":");
 	while (token != NULL)
 	{
 		char full_path[PATH_MAX];
-		snprintf(full_path, sizeof(full_path), "%s/%s", token, command);
+		sprintf(full_path, "%s/%s", token, command);
 
-		printf("Trying path: %s\n", full_path); /*debugage*/
-		
 		if (access(full_path, X_OK) == 0)
 		{
 			free(path_copy);

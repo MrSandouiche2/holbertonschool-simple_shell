@@ -42,8 +42,6 @@ void handle_command(char *command, char *prog_name)
 			return;
 		}
 
-		printf("Executing: %s\n", full_path); /*debuging line*/
-
 		pid = fork();
 		if (pid == 0)
 		{
