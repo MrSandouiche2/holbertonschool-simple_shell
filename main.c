@@ -24,7 +24,6 @@ int main(int argc, char **argv)
 			nread = getline(&line, &len, stdin);
 			if (nread == -1)
 			{
-				free(line);
 				break;
 			}
 			handle_command(line, argv[0]);
@@ -36,8 +35,7 @@ int main(int argc, char **argv)
 		{
 			handle_command(line, argv[0]);
 		}
-		free(line);
 	}
-
-	return 0;
+	free(line);
+	return (0);
 }
