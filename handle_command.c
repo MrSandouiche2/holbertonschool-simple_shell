@@ -3,6 +3,8 @@
 #include <sys/wait.h>
 #include <unistd.h>
 #include <string.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 void handle_command(char *command, char *prog_name)
 {
@@ -11,6 +13,7 @@ void handle_command(char *command, char *prog_name)
 	char *argv[MAX_ARGS]; /* MAX_ARGS est maintenant défini */
 	int argc = 0;
 	char *token;
+	char *full_path;
 
 	/* Tokenize the command to split it into arguments */
 	token = strtok(command, " \n");
@@ -31,14 +34,25 @@ void handle_command(char *command, char *prog_name)
 	}
 	else
 	{
+		full_path = find_executable(argv[0]);
+		if (full_path == NULL)
+		{
+			/*command not found*/
+			error_message(prog_name, argv[0], argc);
+			return;
+		}
+
+		printf("Executing: %s\n", full_path); /*debuging line*/
+
 		pid = fork();
 		if (pid == 0)
 		{
-			/* Child process */
-			execve(argv[0], argv, environ);
-			/* If execve fails, print error and exit using error_message */
-			error_message(prog_name, argv[0], argc);
-			exit(1);
+			if (execve(full_path, argv, environ) == -1)
+			{
+				perror("execve");
+				free(full_path);
+				exit(1);
+			}
 		}
 		else if (pid < 0)
 		{
@@ -50,6 +64,7 @@ void handle_command(char *command, char *prog_name)
 			/* Parent process waits for the child to finish */
 			wait(&status);
 		}
+		free(full_path);
 	}
 }
 
