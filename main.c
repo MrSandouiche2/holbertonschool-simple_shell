@@ -16,7 +16,7 @@ int main(int argc, char **argv)
 	(void)argc;
 	(void)argv;
 
- 	if (isatty(STDIN_FILENO))
+	if (isatty(STDIN_FILENO))
 	{
 		while (1)
 		{

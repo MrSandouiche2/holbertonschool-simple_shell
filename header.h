@@ -1,5 +1,6 @@
 #ifndef HEADER_H
 #define HEADER_H
+
 #define MAX_ARGS 10  /* Remplace 10 par le nombre maximum d'arguments que tu souhaites autoriser */
 
 

@@ -2,23 +2,19 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <unistd.h>
-#include <string.h>
-#include <stdlib.h>
-#include <stdio.h>
 #include <limits.h>
 
-#define PATH_MAX 4096
-
-extern char **environ;
-
-void handle_command(char *command, char *prog_name)
+/**
+ * tokenize_command - Tokenizes the command into arguments.
+ * @command: The command to be tokenized.
+ * @argv: Array to store the tokenized arguments.
+ *
+ * Return: The number of arguments tokenized.
+ */
+int tokenize_command(char *command, char *argv[])
 {
-	pid_t pid;
-	int status;
-	char *argv[MAX_ARGS]; /* MAX_ARGS est maintenant défini */
-	int argc = 0;
 	char *token;
-	char *full_path;
+	int argc = 0;
 
 	/* Tokenize the command to split it into arguments */
 	token = strtok(command, " \n");
@@ -28,6 +24,63 @@ void handle_command(char *command, char *prog_name)
 		token = strtok(NULL, " \n");
 	}
 	argv[argc] = NULL;
+
+	return (argc);
+}
+
+/**
+ * execute_external_command - Executes an external command.
+ * @argv: Array of command arguments.
+ * @prog_name: The name of the program (for error messages).
+ */
+void execute_external_command(char *argv[], char *prog_name)
+{
+	pid_t pid;
+	int status;
+	char *full_path;
+
+	full_path = find_executable(argv[0]);
+	if (full_path == NULL)
+	{
+		/* Command not found */
+		error_message(prog_name, argv[0], 0);
+		return;
+	}
+
+	pid = fork();
+	if (pid == 0)
+	{
+		/* Child process */
+		if (execve(full_path, argv, environ) == -1)
+		{
+			perror("execve");
+			exit(1);
+		}
+	}
+	else if (pid < 0)
+	{
+		/* Error forking */
+		perror("fork");
+	}
+	else
+	{
+		/* Parent process waits for the child to finish */
+		wait(&status);
+	}
+	free(full_path);
+}
+
+/**
+ * handle_command - Processes and executes a command.
+ * @command: The command to be executed.
+ * @prog_name: The name of the program (for error messages).
+ */
+void handle_command(char *command, char *prog_name)
+{
+	char *argv[MAX_ARGS]; /* Array for command arguments */
+	int argc;
+
+	argc = tokenize_command(command, argv);
 
 	if (argc == 0) /* No command to execute */
 		return;
@@ -39,36 +92,10 @@ void handle_command(char *command, char *prog_name)
 	}
 	else
 	{
-		full_path = find_executable(argv[0]);
-		if (full_path == NULL)
-		{
-			/*command not found*/
-			error_message(prog_name, argv[0], argc);
-			return;
-		}
-
-		pid = fork();
-		if (pid == 0)
-		{
-			if (execve(full_path, argv, environ) == -1)
-			{
-				perror("execve");
-				exit(1);
-			}
-		}
-		else if (pid < 0)
-		{
-			/* Error forking */
-			perror("fork");
-		}
-		else
-		{
-			/* Parent process waits for the child to finish */
-			wait(&status);
-		}
-		free(full_path);
+		execute_external_command(argv, prog_name);
 	}
 }
+
 /**
  * find_executable - Finds the full path of an executable command.
  * @command: The command to find.
@@ -82,11 +109,11 @@ char *find_executable(char *command)
 	char *path = _getenv("PATH");
 
 	if (path == NULL)
-		return NULL;
+		return (NULL);
 
 	path_copy = malloc(strlen(path) + 1);
 	if (path_copy == NULL)
-		return NULL;
+		return (NULL);
 
 	strcpy(path_copy, path);
 
@@ -94,20 +121,28 @@ char *find_executable(char *command)
 	while (token != NULL)
 	{
 		char full_path[PATH_MAX];
+
 		sprintf(full_path, "%s/%s", token, command);
 
 		if (access(full_path, X_OK) == 0)
 		{
 			free(path_copy);
-			return strdup(full_path);
+			return (strdup(full_path));
 		}
 
 		token = strtok(NULL, ":");
 	}
 
 	free(path_copy);
-	return NULL;
+	return (NULL);
 }
+
+/**
+ * _getenv - Custom implementation of getenv.
+ * @name: The name of the environment variable to get.
+ *
+ * Return: The value of the environment variable or NULL if not found.
+ */
 char *_getenv(const char *name)
 {
 	size_t name_len = strlen(name);
@@ -117,12 +152,13 @@ char *_getenv(const char *name)
 	{
 		if (strncmp(*env, name, name_len) == 0 && (*env)[name_len] == '=')
 		{
-			return *env + name_len + 1; /* Retourne la valeur de la variable d'environnement */
+			return (*env + name_len + 1);
 		}
 		env++;
 	}
 
-	return NULL; /* Variable d'environnement non trouvée */
+	return (NULL); /* Environment variable not found */
 }
+
 
 
