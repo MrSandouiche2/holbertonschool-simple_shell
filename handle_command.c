@@ -5,6 +5,11 @@
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
+#include <limits.h>
+
+#define PATH_MAX 4096
+
+extern char **environ;
 
 void handle_command(char *command, char *prog_name)
 {
@@ -64,4 +69,60 @@ void handle_command(char *command, char *prog_name)
 		free(full_path);
 	}
 }
+/**
+ * find_executable - Finds the full path of an executable command.
+ * @command: The command to find.
+ *
+ * Return: The full path to the command or NULL if not found.
+ */
+char *find_executable(char *command)
+{
+	char *path_copy;
+	char *token;
+	char *path = _getenv("PATH");
+
+	if (path == NULL)
+		return NULL;
+
+	path_copy = malloc(strlen(path) + 1);
+	if (path_copy == NULL)
+		return NULL;
+
+	strcpy(path_copy, path);
+
+	token = strtok(path_copy, ":");
+	while (token != NULL)
+	{
+		char full_path[PATH_MAX];
+		sprintf(full_path, "%s/%s", token, command);
+
+		if (access(full_path, X_OK) == 0)
+		{
+			free(path_copy);
+			return strdup(full_path);
+		}
+
+		token = strtok(NULL, ":");
+	}
+
+	free(path_copy);
+	return NULL;
+}
+char *_getenv(const char *name)
+{
+	size_t name_len = strlen(name);
+	char **env = environ;
+
+	while (*env != NULL)
+	{
+		if (strncmp(*env, name, name_len) == 0 && (*env)[name_len] == '=')
+		{
+			return *env + name_len + 1; /* Retourne la valeur de la variable d'environnement */
+		}
+		env++;
+	}
+
+	return NULL; /* Variable d'environnement non trouvée */
+}
+
 

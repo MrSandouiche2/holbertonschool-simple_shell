@@ -18,5 +18,6 @@ void error_message(char *prog_name, char *command, int argc);
 int is_builtin(char *command);
 void handle_builtins(char *command, char *line);
 char *find_executable(char *command);
+char *_getenv(const char *name);
 
 #endif /* HEADER_H */
