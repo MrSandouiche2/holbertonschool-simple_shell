@@ -16,10 +16,11 @@ int is_builtin(char *command)
 	}
 	return (0);
 }
-void handle_builtins(char *command)
+void handle_builtins(char *command, char *line)
 {
 	if (strcmp(command, "exit") == 0)
 	{
+		free(line);
 		exit(0);
 	}
 }
@@ -50,6 +51,7 @@ char *find_executable(char *command)
 	char *path_copy;
 	char *token;
 	char *path = getenv("PATH");
+
 	if (path == NULL)
 		return NULL;
 

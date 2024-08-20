@@ -30,7 +30,7 @@ void handle_command(char *command, char *prog_name)
 	/* Check if the command is a built-in command */
 	if (is_builtin(argv[0]))
 	{
-		handle_builtins(argv[0]);
+		handle_builtins(argv[0], command);
 	}
 	else
 	{
@@ -48,7 +48,6 @@ void handle_command(char *command, char *prog_name)
 			if (execve(full_path, argv, environ) == -1)
 			{
 				perror("execve");
-				free(full_path);
 				exit(1);
 			}
 		}

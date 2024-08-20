@@ -16,7 +16,7 @@ void display_prompt(void);
 void handle_command(char *command, char *prog_name);
 void error_message(char *prog_name, char *command, int argc);
 int is_builtin(char *command);
-void handle_builtins(char *command);
+void handle_builtins(char *command, char *line);
 char *find_executable(char *command);
 
 #endif /* HEADER_H */
