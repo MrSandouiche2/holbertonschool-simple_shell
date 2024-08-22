@@ -3,6 +3,16 @@
 This is a simple shell implementation in C,
 designed to mimic basic functionality of Unix-like command-line interfaces.
 
+## Files
+
+main.c: Contains the main loop of the shell, which reads user input and manages command execution.
+
+handle_commands.c: Manages command tokenization, executable search, and execution of external commands.
+
+builtins.c: Contains the logic for built-in commands like exit.
+
+header.h: Header file with function declarations and global variables.
+
 ## Compilation
 
 Compile the shell using the following command:
