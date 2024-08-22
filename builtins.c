@@ -11,7 +11,7 @@
  */
 int is_builtin(char *command)
 {
-	if (strcmp(command, "exit") == 0)
+	if (strcmp(command, "exit") == 0 || strcmp(command, "env") == 0)
 	{
 		return (1);
 	}
@@ -24,6 +24,7 @@ int is_builtin(char *command)
  *
  * Description: Frees the memory allocated for the input line and exits
  *              the program if the command is "exit".
+ *  If the command is "env", it prints the current environment variables.
  */
 void handle_builtins(char *command, char *line)
 {
@@ -31,6 +32,16 @@ void handle_builtins(char *command, char *line)
 	{
 		free(line);
 		exit(0);
+	}
+	else if (strcmp(command, "env") == 0)
+	{
+		char **env = environ;
+
+		while (*env)
+		{
+			printf("%s\n", *env);
+			env++;
+		}
 	}
 }
 /**

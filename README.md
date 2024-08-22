@@ -7,9 +7,9 @@ designed to mimic basic functionality of Unix-like command-line interfaces.
 
 Compile the shell using the following command:
 
-gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
-
 ```bash
+
+gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o hsh
 
 
 USAGE
@@ -20,7 +20,7 @@ Run the shell in interactive mode :
 
 ./hsh
 
-You will see a prompt (($)) where you can enter commands. To exit the shell, type exit.
+You will see a prompt ('($)') where you can enter commands. To exit the shell, type 'exit'.
 
 NON-INTERACTIVE Mode
 
@@ -32,12 +32,14 @@ This will execute the command /bin/ls and display the output.
 
 Features
 
-Prompt: Displays a prompt (($)) for user input.
+Prompt: Displays a prompt ('($)') for user input.
 Built-in Commands: Supports exit to quit the shell and env to display environment variables.
-Command Execution: Executes commands using execve and handles errors.
+Command Execution: Executes commands using 'execve' and handles errors.
+Arguments: Supports commands with arguments.
 EOF Handling: Gracefully exits on EOF (Ctrl+D).
+
 Limitations
-Only handles commands without arguments.
+
 Does not support advanced features like pipes, redirections, or special characters.
 
 Authors

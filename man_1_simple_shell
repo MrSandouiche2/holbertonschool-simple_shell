@@ -29,7 +29,6 @@ The shell can also be run in non-interactive mode by piping commands to it. For 
 .SH LIMITATIONS
 This shell does not support advanced features such as:
 .TP
-.B - Arguments for commands
 .B - Pipes and redirections
 .B - Special characters (", ', &, #)
 .SH EXIT STATUS
