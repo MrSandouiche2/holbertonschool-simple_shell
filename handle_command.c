@@ -43,7 +43,7 @@ void execute_external_command(char *argv[], char *prog_name)
 	if (full_path == NULL)
 	{
 		/* Command not found */
-		error_message(prog_name, argv[0], 0);
+		error_message(prog_name, argv[0]);
 		return;
 	}
 

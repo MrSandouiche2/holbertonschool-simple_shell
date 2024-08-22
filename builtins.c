@@ -44,7 +44,7 @@ void handle_builtins(char *command, char *line)
 void display_prompt(void)
 {
 	/* Display the prompt symbol */
-	printf("$ ");
+	printf("($) ");
 	fflush(stdout); /* Ensure the prompt is displayed */
 }
 /**
@@ -58,7 +58,7 @@ void display_prompt(void)
  *
  * Return: void
  */
-void error_message(char *prog_name, char *command, int argc)
+void error_message(char *prog_name, char *command)
 {
-	fprintf(stderr, "%s: %d: %s: not found\n", prog_name, argc, command);
+	fprintf(stderr, "%s: %s: not found\n", prog_name, command);
 }
